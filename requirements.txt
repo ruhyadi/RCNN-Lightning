@@ -1,0 +1,11 @@
+
+# torch
+# torchvision
+
+numpy
+pytorch-lightning
+hydra-core
+opencv-python==4.4.*
+opencv-python-headless==4.4.*
+pandas
+albumentations
