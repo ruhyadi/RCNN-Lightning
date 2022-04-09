@@ -1,22 +1,10 @@
-
+import os
+from omegaconf import OmegaConf, DictConfig
 from utils import load_obj, set_seed, flatten_omegaconf
 
-from model import LitWheat
+from model import LitWheat, model_selection
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
-
-def model_selection(cfg):
-
-    model = load_obj(cfg.model.backbone.class_name)
-    model = model(**cfg.model.backbone.params)
-
-    # get number of input features for the classifier
-    in_features = model.roi_heads.box_predictor.cls_score.in_features
-
-    head = load_obj(cfg.model.head.class_name)
-
-    # replace the pre-trained head with a new one
-    model.roi_heads.box_predictor = head(in_features, cfg.model.head.params.num_classes)
 
 def train(cfg):
     set_seed(cfg.training.seed)
@@ -35,9 +23,18 @@ def train(cfg):
 
     # trainer
     trainer = pl.Trainer(logger=[tb_logger],
-                     early_stop_callback=early_stopping,
+                     callbacks=[early_stopping],
                      checkpoint_callback=model_checkpoint,
                      **cfg.trainer)
 
     # fit trainer
     trainer.fit(lit_model)
+
+if __name__ == '__main__':
+
+    ROOT = os.getcwd()
+    # get config
+    config_path = os.path.join(ROOT, 'config/config.yaml')
+    cfg = OmegaConf.load(config_path)
+
+    train(cfg)

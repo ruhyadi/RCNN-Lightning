@@ -127,7 +127,6 @@ def flatten_omegaconf(d, sep="_"):
     return obj
 
 
-
 def get_training_datasets(cfg: DictConfig) -> dict:
     """
     Get datases for modelling
@@ -148,6 +147,8 @@ def get_training_datasets(cfg: DictConfig) -> dict:
     train['x1'] = train['x'] + train['w']
     train['y1'] = train['y'] + train['h']
     train['area'] = train['w'] * train['h']
+
+    # split training and validation
     train_ids, valid_ids = train_test_split(train['image_id'].unique(), test_size=0.1, random_state=cfg.training.seed)
 
     # for fast training

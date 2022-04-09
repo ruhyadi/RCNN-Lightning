@@ -87,7 +87,3 @@ class WheatDataset(Dataset):
 
     def __len__(self) -> int:
         return len(self.image_ids)
-
-if __name__ == '__main__':
-    
-    dataset = WheatDataset()

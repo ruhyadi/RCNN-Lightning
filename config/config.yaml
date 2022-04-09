@@ -33,13 +33,13 @@ callbacks:
   model_checkpoint:
     class_name: pl.callbacks.ModelCheckpoint
     params:
-      filepath: saved_models/
+      dirpath: saved_models/
       mode: ${training.mode}
       monitor: ${training.metric}
       save_top_k: 3
 data:
   batch_size: 12
-  folder_path: /kaggle/input/global-wheat-detection
+  folder_path: /home/didi/Repository/RCNN-Lightning/data
   num_workers: 0
 dataset:
   class_name: WheatDataset
@@ -75,15 +75,14 @@ scheduler:
   step: epoch
 trainer:
   accumulate_grad_batches: 1
-  distributed_backend: dp
   gpus: 1
   gradient_clip_val: 0.5
-  max_epochs: 13
+  max_epochs: 10
   num_sanity_val_steps: 0
   profiler: false
   weights_summary: null
 training:
-  debug: false
+  debug: False
   lr: 0.0001
   metric: main_score
   mode: max

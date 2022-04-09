@@ -7,7 +7,8 @@ class LitWheat(pl.LightningModule):
     def __init__(self, hparams: DictConfig = None, cfg: DictConfig = None, model = None):
         super(LitWheat, self).__init__()
         self.cfg = cfg
-        self.hparams = hparams
+        # self.hparams = hparams
+        self.save_hyperparameters(hparams)
         self.model = model
 
     def forward(self, x, *args, **kwargs):
@@ -83,3 +84,18 @@ class LitWheat(pl.LightningModule):
         metric = 0
         tensorboard_logs = {'main_score': metric}
         return {'val_loss': metric, 'log': tensorboard_logs, 'progress_bar': tensorboard_logs}
+
+def model_selection(cfg):
+    # load base model
+    model = load_obj(cfg.model.backbone.class_name)
+    model = model(**cfg.model.backbone.params)
+
+    # get number of input features for the classifier
+    in_features = model.roi_heads.box_predictor.cls_score.in_features
+
+    head = load_obj(cfg.model.head.class_name)
+
+    # replace the pre-trained head with a new one
+    model.roi_heads.box_predictor = head(in_features, cfg.model.head.params.num_classes)
+
+    return model
