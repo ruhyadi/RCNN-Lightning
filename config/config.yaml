@@ -39,7 +39,7 @@ callbacks:
       save_top_k: 3
 data:
   batch_size: 12
-  folder_path: /home/didi/Repository/RCNN-Lightning/data
+  folder_path: /content/data
   num_workers: 0
 dataset:
   class_name: WheatDataset
@@ -80,7 +80,6 @@ trainer:
   max_epochs: 10
   num_sanity_val_steps: 0
   profiler: false
-  weights_summary: null
 training:
   debug: False
   lr: 0.0001

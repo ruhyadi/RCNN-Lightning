@@ -1,11 +1,14 @@
 import os
 from omegaconf import OmegaConf, DictConfig
 from utils import load_obj, set_seed, flatten_omegaconf
+import hydra
 
 from model import LitWheat, model_selection
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 
+
+@hydra.main(config_path='../config', config_name='config.yaml')
 def train(cfg):
     set_seed(cfg.training.seed)
     hparams = flatten_omegaconf(cfg)
@@ -31,10 +34,4 @@ def train(cfg):
     trainer.fit(lit_model)
 
 if __name__ == '__main__':
-
-    ROOT = os.getcwd()
-    # get config
-    config_path = os.path.join(ROOT, 'config/config.yaml')
-    cfg = OmegaConf.load(config_path)
-
-    train(cfg)
+    train()
