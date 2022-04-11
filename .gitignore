@@ -146,5 +146,3 @@ logs/
 wandb/
 .env
 .autoenv
-
-OLD/
